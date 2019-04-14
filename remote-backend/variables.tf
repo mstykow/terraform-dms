@@ -16,11 +16,16 @@ variable "region" {
 }
 
 variable "stack_name" {
-  description = "The name of our application"
+  description = "The application stack name"
   default     = "ingest-test-stack"
 }
 
 variable "owner" {
   description = "A group email address to be used in tags"
   default     = "maxim.stykow@tngtech.com"
+}
+
+variable "creator" {
+  description = "Backend creator"
+  default     = "maxim"
 }

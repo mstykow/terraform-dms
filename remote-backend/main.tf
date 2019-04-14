@@ -25,6 +25,6 @@ resource "aws_s3_bucket" "terraform_state" {
     Name       = "terraform-state"
     owner      = "${var.owner}"
     stack_name = "${var.stack_name}"
-    created_by = "terraform-dms"
+    created_by = "${var.creator}"
   }
 }
