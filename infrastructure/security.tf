@@ -44,12 +44,14 @@ resource "aws_security_group" "rds" {
     self      = true
   }
 
+  /*
   ingress {
     from_port = "${var.target_db_port}"
     to_port   = "${var.target_db_port}"
     protocol  = "TCP"
     self      = true
   }
+  */
 
   egress {
     from_port   = 0
@@ -57,7 +59,6 @@ resource "aws_security_group" "rds" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   tags {
     Name        = "${var.stack_name}-${var.environment}-rds-sg"
     owner       = "${var.owner}"

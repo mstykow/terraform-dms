@@ -45,7 +45,7 @@ resource "aws_subnet" "subnet" {
     created_by  = "${var.user1}"
   }
   lifecycle {
-    ignore_changes = "all"
+    ignore_changes  = "all"
     prevent_destroy = true
   }
 }

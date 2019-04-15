@@ -30,7 +30,8 @@ resource "aws_instance" "ubuntu_server" {
 
   #key_name      = "${aws_key_pair.generated_key.key_name}" # option 1)
   #key_name      = "${aws_key_pair.public_key.key_name}" # option 2)
-  key_name      = "${var.key_name}" # option 3)
+  key_name = "${var.key_name}" # option 3)
+
   vpc_security_group_ids = ["${aws_security_group.rds.id}", "${aws_security_group.public.id}"]
 
   tags = {
@@ -46,6 +47,7 @@ resource "aws_instance" "ubuntu_server" {
 # EC2 SSH Key Options
 #--------------------------------------------------------------
 
+
 /*
 # 1a) Generate key on the fly
 resource "tls_private_key" "tls_key" {
@@ -53,6 +55,7 @@ resource "tls_private_key" "tls_key" {
   rsa_bits  = 4096
 }
 */
+
 
 /*
 # 1b) Create key pair from generated key with key_name
@@ -62,6 +65,7 @@ resource "aws_key_pair" "generated_key" {
 }
 */
 
+
 /*
 # 2) Create key pair from variable key_public with key_name
 resource "aws_key_pair" "public_key" {
@@ -70,4 +74,6 @@ resource "aws_key_pair" "public_key" {
 }
 */
 
+
 # 3) Use an exisiting key pair referenced by name in variable `key_name`
+

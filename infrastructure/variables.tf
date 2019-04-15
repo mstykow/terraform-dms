@@ -52,7 +52,6 @@ variable "availability_zones" {
 #--------------------------------------------------------------
 
 # Used in tagging and naming the resources
-
 variable "region" {
   description = "VPC region"
 }
@@ -108,7 +107,7 @@ variable "vpc" {
 }
 
 #--------------------------------------------------------------
-# DMS Replication Instance
+# DMS Replication Config
 #--------------------------------------------------------------
 
 variable "replication_instance_maintenance_window" {
@@ -131,18 +130,23 @@ variable "replication_instance_class" {
   default     = "dms.t2.micro"
 }
 
-#--------------------------------------------------------------
-# DMS target config
-#--------------------------------------------------------------
-
-variable "target_backup_retention_period" {
-  default     = "0"                        #disabled
-  description = "Retention of RDS backups"
+variable "replication_task_id" {
+  description = "Unique identifier/name for the task"
+  default     = "ingest-test-task1"
 }
 
-variable "target_backup_window" {
-  default     = "14:00-17:00"
-  description = "RDS backup window"
+#--------------------------------------------------------------
+# DMS Target Config
+#--------------------------------------------------------------
+
+variable "target_bucket" {
+  description = "Name of the target S3 bucket"
+  default     = "ingest-test-targetbucket"
+}
+
+variable "target_bucket_folder" {
+  description = "Name of the target folder in target S3 bucket"
+  default     = "mysqlTest"
 }
 
 variable "target_db_name" {
@@ -150,73 +154,29 @@ variable "target_db_name" {
   default     = "ingest_test_targetdb"
 }
 
-variable "target_db_port" {
-  description = "The port the Application Server will access the database on"
-  default     = 5432
-}
-
-variable "target_engine" {
-  default     = "postgres"
+# Can be one of aurora | azuredb | docdb | dynamodb | mariadb | mongodb | mysql | oracle | postgres | redshift | s3 | sqlserver | sybase
+variable "target_engine_name" {
   description = "Engine type, example values mysql, postgres"
+  default     = "s3"
 }
 
-variable "target_engine_version" {
-  description = "Engine version"
-  default     = "9.3.25"
-}
-
-variable "target_instance_class" {
-  default     = "db.t2.micro"
-  description = "Instance class"
-}
-
-variable "target_maintenance_window" {
-  default     = "Mon:00:00-Mon:03:00"
-  description = "RDS maintenance window"
-}
-
-variable "target_username" {
-  description = "Username to access the target database"
-  default     = "cdh_testuser"
-}
-
-variable "target_password" {
-  description = "Password of the target database"
-  default     = "cdh_testuserpw"
-}
-
-variable "target_rds_is_multi_az" {
-  description = "Create backup database in separate availability zone"
-  default     = "false"
-}
-
-variable "target_storage" {
-  default     = "5"
-  description = "Storage size in GB"
-}
-
-variable "target_storage_type" {
-  default     = "standard"
-  description = "storage type: standard | gp2 | io1"
-}
-
-variable "target_storage_encrypted" {
-  description = "Encrypt storage or leave unencrypted"
-  default     = false
+variable "compression_type" {
+  description = "Compress files in S3? Options are NONE | GZIP."
+  default     = "NONE"
 }
 
 #--------------------------------------------------------------
-# DMS source config
+# DMS Source Config
 #--------------------------------------------------------------
 
 variable "source_app_username" {
   description = "Username for the endpoint to access the source database"
-  default     = "testappuser"
+  default     = "testuser"
 }
 
 variable "source_app_password" {
   description = "Password for the endpoint to access the source database"
-  default     = "testappuserpw"
+  default     = "testuserpw"
 }
 
 variable "source_username" {
@@ -229,9 +189,10 @@ variable "source_password" {
   default     = "testuserpw"
 }
 
+# Must be non-zero for CDC to work
 variable "source_backup_retention_period" {
   description = "The days to retain RDS backups for (0-35)"
-  default     = "0" # disabled
+  default     = "10"
 }
 
 variable "source_backup_window" {
@@ -259,16 +220,16 @@ variable "source_db_port" {
   default     = 5432
 }
 
+# Can be one of aurora | aurora-mysql | aurora-postgresql | mariadb | mysql | oracle-ee | oracle-se2 | oracle-se1 | oracle-se | postgres | sqlserver-ee | sqlserver-se | sqlserver-ex | sqlserver-web
 variable "source_engine" {
   description = "The string of the database engine to be used for this instance"
-  # Can be one of aurora | aurora-mysql | aurora-postgresql | mariadb | mysql | oracle-ee | oracle-se2 | oracle-se1 | oracle-se | postgres | sqlserver-ee | sqlserver-se | sqlserver-ex | sqlserver-web
   default     = "mysql"
 }
 
+# Can be one of aurora | azuredb | docdb | dynamodb | mariadb | mongodb | mysql | oracle | postgres | redshift | s3 | sqlserver | sybase
 variable "source_engine_name" {
   description = "Engine name for DMS endpoint"
-  # Can be one of aurora | azuredb | docdb | dynamodb | mariadb | mongodb | mysql | oracle | postgres | redshift | s3 | sqlserver | sybase
-  default = "mysql"
+  default     = "mysql"
 }
 
 variable "source_engine_version" {
@@ -283,7 +244,7 @@ variable "source_instance_class" {
 
 variable "source_storage" {
   description = "Storage size in GB"
-  default     = "20" # 20 is free tier
+  default     = "20"                 # 20 is free tier
 }
 
 variable "source_storage_type" {
@@ -296,8 +257,10 @@ variable "source_storage_encrypted" {
   default     = false
 }
 
-/*
-variable "source_snapshot" {
-  description = "Snapshot ID"
+# Can be one of none | require | verify-ca | verify-full
+# See https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Security.SSL.html
+# for which is supported for your DB engine
+variable "source_ssl_mode" {
+  description = "Type of SSL to use if desired"
+  default     = "none"
 }
-*/

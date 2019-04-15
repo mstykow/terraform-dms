@@ -1,0 +1,29 @@
+{
+    "TargetMetadata": {
+        "TargetSchema": "",
+        "SupportLobs": false,
+        "FullLobMode": false,
+        "LobChunkSize": 64,
+        "LimitedSizeLobMode": true,
+        "LobMaxSize": 32,
+        "BatchApplyEnabled": true,
+        "ExceptionTableEnabled": true
+    },
+    "FullLoadSettings": {
+        "FullLoadEnabled": true,
+        "ApplyChangesEnabled": true,
+        "TargetTablePrepMode": "DROP_AND_CREATE",
+        "CreatePkAfterFullLoad": false,
+        "StopTaskCachedChangesApplied": false,
+        "StopTaskCachedChangesNotApplied": false,
+        "ResumeEnabled": false,
+        "ResumeMinTableSize": 100000,
+        "ResumeOnlyClusteredPKTables": true,
+        "MaxFullLoadSubTasks": 3,
+        "TransactionConsistencyTimeout": 600,
+        "CommitRate": 10000
+    },
+    "Logging": {
+        "EnableLogging": true
+    }
+}
